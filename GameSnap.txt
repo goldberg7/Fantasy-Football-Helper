@@ -1,0 +1,16 @@
+#Games
+MIA vs. BUF
+NYJ vs. NE
+ATL vs. CAR
+TEN vs. JAX
+MIN vs. GB
+SD vs. CLE
+WAS vs CHI
+#Snapshot
+Offense: MIA Position: 3
+Offense: NE Position: 37
+Offense: ATL Position: 57
+Offense: JAX Position: 88
+Offense: MIN Position: 45
+Offense: CLE Position: 95
+Offense: WAS Position: 77
