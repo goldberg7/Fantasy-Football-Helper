@@ -1,12 +1,23 @@
+import java.util.ArrayList;
 
 public class NFLTeam implements Comparable<NFLTeam> {
-	String name;
-	boolean isPlaying;
-	boolean isOnOffense;
-	int fieldPosition; //0 to 100
+	private String name;
+	private boolean isPlaying;
+	private boolean isOnOffense;
+	private int fieldPosition; //0 to 100
+	private NFLTeam opponent;
+	
+	
 	
 	public NFLTeam(String name){
 		this.name = name;
+		
+		/* Default init values*/
+		this.isPlaying = false;
+		this.isOnOffense = false; 
+		this.fieldPosition = 0;
+		this.opponent = null;
+		
 	}
 	
 	public int compareTo(NFLTeam other)
@@ -52,6 +63,11 @@ public class NFLTeam implements Comparable<NFLTeam> {
 		this.fieldPosition = position;
 	}
 	
+	public void setOpponent(NFLTeam team){
+		this.opponent = team;
+	}
+	
+	
 	public boolean getPlaying(){
 		return this.isPlaying;
 	}
@@ -62,5 +78,9 @@ public class NFLTeam implements Comparable<NFLTeam> {
 	
 	public int getPosition(){
 		return this.fieldPosition;
+	}
+	
+	public NFLTeam getOpponent(){
+		return this.opponent;
 	}
 }

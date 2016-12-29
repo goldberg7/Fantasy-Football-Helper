@@ -5,12 +5,23 @@ import java.io.*;
 public class Main {
 
 	public static void main(String[] args) {
-		FantasyTeam team = populateRoster("Roster.txt");
+		FantasyTeam team = populateRoster("FantasyRoster.txt");
 		ArrayList<Player> list = team.getPlayers();
-		for(Player p : list){
-			System.out.println(p.getName());
-			System.out.println(p.getPosition());
-			System.out.println(p.getTeam().toString());
+//		for(Player p : list){
+//			System.out.println(p.getName());
+//			System.out.println(p.getPosition());
+//			System.out.println(p.getTeam().toString());
+//			System.out.println();
+//		}
+
+		ArrayList<NFLTeam> teams = generateGamesFromSnap("GameSnap.txt");
+		for(NFLTeam ateam: teams){
+			System.out.println(ateam.toString());
+			System.out.println("Opponent: " + ateam.getOpponent());
+			System.out.println("On offense: " + ateam.getOffense());
+			System.out.println("Is playing: " + ateam.getPlaying());
+			System.out.println("Field position: " + ateam.getPosition());
+			
 			System.out.println();
 		}
 
@@ -43,5 +54,76 @@ public class Main {
 		}
 		
 	}
+	
+	public static ArrayList<NFLTeam> generateGamesFromSnap(String filename){
+		try{
+			File file = new File(filename);
+			Scanner scnr = new Scanner(file);
+			
+			ArrayList<NFLTeam> teams = new ArrayList<NFLTeam>();
+			int lineCase = 0;
+			
+			while(scnr.hasNextLine()){
+				String line = scnr.nextLine();
+				/*GameSnap has two text sections, the first is the 
+				 * list of teams playing, and the second is a sample
+				 * of potential field position
+				 * */
+				switch(line){
+				case "#Games":
+					lineCase = 1;
+					line = scnr.nextLine();
+					break;
+				case "#Snapshot":
+					lineCase = 2;
+					line = scnr.nextLine();
+					break;
+				default:
+					break;
+				}
+				
+				if(lineCase == 1){
+					//Format: tName, vs., tName2
+					String[] parsedLine = line.split(" ");
+					
+					NFLTeam team1 = new NFLTeam(parsedLine[0]);
+					NFLTeam team2 = new NFLTeam(parsedLine[2]);
+					
+					/*Override default boolean values for 
+					 * newly constructed NFLTeams		*/
+					team1.setPlaying(true);
+					team1.setOpponent(team2);
+					
+					team2.setPlaying(true);
+					team2.setOpponent(team1);
+					
+					teams.add(team1);
+					teams.add(team2);
+					
+				}
+				else{
+					//Format: Offense: tName position int
+					String[] parsedLine = line.split(" ");
+					NFLTeam team = getTeamFromName(teams, parsedLine[1]);
+					team.setOffense(true);
+					team.setFieldPosition(Integer.parseInt(parsedLine[3]));
+				}
+			}
+			
+			return teams;
+		}catch(FileNotFoundException e){
+			System.out.println("File could not be opened");
+			return null;
+		}
+	}
 
+	private static NFLTeam getTeamFromName(ArrayList<NFLTeam> teams, String name){
+		for(NFLTeam team : teams){
+			if(team.toString().equals(name)){
+				return team;
+			}
+		}
+		
+		return null;
+	}
 }
