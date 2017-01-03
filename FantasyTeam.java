@@ -4,11 +4,11 @@ public class FantasyTeam {
 	
 	private ArrayList<Player> players_list;
 	int numPlayers;
-	private PriorityQueue<NFLTeam> pq;	
+	
 	
 	public FantasyTeam(){
 		players_list = new ArrayList<Player>();
-		pq = new PriorityQueue<NFLTeam>();
+		
 		numPlayers = 0;
 	}
 	
