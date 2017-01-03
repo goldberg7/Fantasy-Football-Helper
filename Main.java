@@ -7,12 +7,6 @@ public class Main {
 	public static void main(String[] args) {
 		FantasyTeam team = populateRoster("FantasyRoster.txt");
 		ArrayList<Player> list = team.getPlayers();
-//		for(Player p : list){
-//			System.out.println(p.getName());
-//			System.out.println(p.getPosition());
-//			System.out.println(p.getTeam().toString());
-//			System.out.println();
-//		}
 
 		ArrayList<NFLTeam> teams = generateGamesFromSnap("GameSnap.txt");
 		for(NFLTeam ateam: teams){
@@ -22,9 +16,14 @@ public class Main {
 			System.out.println("Is playing: " + ateam.getPlaying());
 			System.out.println("Field position: " + ateam.getPosition());
 			
-			System.out.println();
+		
 		}
-
+		System.out.println("***************\n***************");
+		teams.sort(null);
+		teams = reverse(teams);
+		for(NFLTeam aTeam: teams){
+			System.out.println(aTeam.toString());
+		}
 	}
 	
 	public static FantasyTeam populateRoster(String filename){
@@ -125,5 +124,12 @@ public class Main {
 		}
 		
 		return null;
+	}
+	
+	public static ArrayList<NFLTeam> reverse(ArrayList<NFLTeam> list) {
+	    for(int i = 0, j = list.size() - 1; i < j; i++) {
+	        list.add(i, list.remove(j));
+	    }
+	    return list;
 	}
 }
