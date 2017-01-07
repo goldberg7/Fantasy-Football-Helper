@@ -5,25 +5,39 @@ import java.io.*;
 public class Main {
 
 	public static void main(String[] args) {
-		FantasyTeam team = populateRoster("FantasyRoster.txt");
-		ArrayList<Player> list = team.getPlayers();
+		FantasyTeam fantasyTeam = populateRoster("FantasyRoster.txt");
+		ArrayList<Player> list = fantasyTeam.getPlayers();
 
 		ArrayList<NFLTeam> teams = generateGamesFromSnap("GameSnap.txt");
+		ArrayList<NFLTeam> fullRosters = populateFullRosters("NFLRosters.txt");
+		
+		/*
 		for(NFLTeam ateam: teams){
 			System.out.println(ateam.toString());
 			System.out.println("Opponent: " + ateam.getOpponent());
 			System.out.println("On offense: " + ateam.getOffense());
 			System.out.println("Is playing: " + ateam.getPlaying());
-			System.out.println("Field position: " + ateam.getPosition());
-			
-		
+			System.out.println("Field position: " + ateam.getPosition());	
 		}
+		 */
+		
 		System.out.println("***************\n***************");
 		teams.sort(null);
 		teams = reverse(teams);
+		
+		/*
 		for(NFLTeam aTeam: teams){
 			System.out.println(aTeam.toString());
+		}*/
+		
+		for(NFLTeam team: fullRosters){
+			//System.out.println(team.toString());
+			if(team.getPlayersList().contains("Jacquizz Rodgers")){
+				System.out.println("Team: " + team.toString());
+			}
+			//team.printRoster();
 		}
+		
 	}
 	
 	public static FantasyTeam populateRoster(String filename){
@@ -40,7 +54,7 @@ public class Main {
 				String[] parts = line.split(" ");
 				NFLTeam nTeam = new NFLTeam(parts[2]);
 				Player player = new Player(parts[0], parts[1], nTeam, parts[3]);
-				team.addPlayer(player);	
+					team.addPlayer(player);	
 				}
 				
 			
@@ -131,5 +145,42 @@ public class Main {
 	        list.add(i, list.remove(j));
 	    }
 	    return list;
+	}
+	
+	public static ArrayList<NFLTeam> populateFullRosters(String filename){
+		try{
+			File file = new File(filename);
+			Scanner scnr = new Scanner(file);
+			ArrayList<NFLTeam> teams = new ArrayList<NFLTeam>();
+			
+			/*Because the first line is the name of an nfl team,
+			 * we don't have to worry about adding a player to
+			 * a null team
+			 */
+			
+			NFLTeam team = null;
+			
+			while(scnr.hasNextLine()){
+				String line = scnr.nextLine();
+				if(line.contains("#")){
+					if(team != null){
+						teams.add(team);
+					}
+					/*create a new team without the # in the name*/
+					team = new NFLTeam(line.substring(1, line.length()));
+				}
+				else{
+					team.addPlayer(line);
+				}
+			}
+			
+			
+			
+			scnr.close();
+			return teams;
+		}catch(FileNotFoundException e){
+			return null;
+		}
+		//return null;
 	}
 }

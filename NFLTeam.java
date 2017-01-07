@@ -6,7 +6,7 @@ public class NFLTeam implements Comparable<NFLTeam> {
 	private boolean isOnOffense;
 	private int fieldPosition; //0 to 100
 	private NFLTeam opponent;
-	
+	private ArrayList<String> players;
 	
 	
 	public NFLTeam(String name){
@@ -17,6 +17,7 @@ public class NFLTeam implements Comparable<NFLTeam> {
 		this.isOnOffense = false; 
 		this.fieldPosition = 0;
 		this.opponent = null;
+		players = new ArrayList<String>();
 		
 	}
 	
@@ -51,6 +52,10 @@ public class NFLTeam implements Comparable<NFLTeam> {
 		return this.name;
 	}
 	
+	public void addPlayer(String name){
+		players.add(name);
+	}
+	
 	public void setPlaying(boolean status){
 		this.isPlaying = status;
 	}
@@ -82,5 +87,15 @@ public class NFLTeam implements Comparable<NFLTeam> {
 	
 	public NFLTeam getOpponent(){
 		return this.opponent;
+	}
+	
+	public ArrayList<String> getPlayersList(){
+		return this.players;
+	}
+	
+	public void printRoster(){
+		for(String player : players){
+			System.out.println("\t" + player);
+		}
 	}
 }
