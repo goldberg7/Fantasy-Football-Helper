@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class NFLTeam implements Comparable<NFLTeam> {
 	private String name;
+	private String acronym;
 	private boolean isPlaying;
 	private boolean isOnOffense;
 	private int fieldPosition; //0 to 100
@@ -18,7 +19,7 @@ public class NFLTeam implements Comparable<NFLTeam> {
 		this.fieldPosition = 0;
 		this.opponent = null;
 		players = new ArrayList<String>();
-		
+		this.acronym = null;
 	}
 	
 	public int compareTo(NFLTeam other)
@@ -56,6 +57,10 @@ public class NFLTeam implements Comparable<NFLTeam> {
 		players.add(name);
 	}
 	
+	public void setAcronym(String acronym){
+		this.acronym = acronym;
+	}
+	
 	public void setPlaying(boolean status){
 		this.isPlaying = status;
 	}
@@ -89,6 +94,9 @@ public class NFLTeam implements Comparable<NFLTeam> {
 		return this.opponent;
 	}
 	
+	public String getAcronym(){
+		return this.acronym;
+	}
 	public ArrayList<String> getPlayersList(){
 		return this.players;
 	}

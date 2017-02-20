@@ -5,42 +5,22 @@ import java.io.*;
 public class Main {
 
 	public static void main(String[] args) {
-		FantasyTeam fantasyTeam = populateRoster("FantasyRoster.txt");
+		FantasyTeam fantasyTeam = populateFantasyRoster("FantasyRoster.txt");
 		ArrayList<Player> list = fantasyTeam.getPlayers();
-
-		ArrayList<NFLTeam> teams = generateGamesFromSnap("GameSnap.txt");
+		ArrayList<NFLTeam> liveTeams = generateGamesFromSnap("GameSnap.txt");
 		ArrayList<NFLTeam> fullRosters = populateFullRosters("NFLRosters.txt");
+
 		
-		/*
-		for(NFLTeam ateam: teams){
-			System.out.println(ateam.toString());
-			System.out.println("Opponent: " + ateam.getOpponent());
-			System.out.println("On offense: " + ateam.getOffense());
-			System.out.println("Is playing: " + ateam.getPlaying());
-			System.out.println("Field position: " + ateam.getPosition());	
-		}
-		 */
+		liveTeams.sort(null);
+		liveTeams = reverse(liveTeams);
+		liveTeams = removeDefensiveTeams(liveTeams);
 		
-		System.out.println("***************\n***************");
-		teams.sort(null);
-		teams = reverse(teams);
-		
-		/*
-		for(NFLTeam aTeam: teams){
+		for(NFLTeam aTeam: liveTeams){
 			System.out.println(aTeam.toString());
-		}*/
-		
-		for(NFLTeam team: fullRosters){
-			//System.out.println(team.toString());
-			if(team.getPlayersList().contains("Jacquizz Rodgers")){
-				System.out.println("Team: " + team.toString());
-			}
-			//team.printRoster();
 		}
-		
 	}
 	
-	public static FantasyTeam populateRoster(String filename){
+	public static FantasyTeam populateFantasyRoster(String filename){
 		File file = new File(filename);
 		FantasyTeam team = new FantasyTeam();
 		
@@ -52,7 +32,7 @@ public class Main {
 
 				//format: fName lName team pos
 				String[] parts = line.split(" ");
-				NFLTeam nTeam = new NFLTeam(parts[2]);
+				NFLTeam nTeam = new NFLTeam(parts[2].toUpperCase());
 				Player player = new Player(parts[0], parts[1], nTeam, parts[3]);
 					team.addPlayer(player);	
 				}
@@ -101,6 +81,12 @@ public class Main {
 					
 					NFLTeam team1 = new NFLTeam(parsedLine[0]);
 					NFLTeam team2 = new NFLTeam(parsedLine[2]);
+					
+					/*For purposes of later comparing NFL Teams with fantasy
+					 * players, also keep a data member for the acronym (ie.
+					 * first few letters of a teams name*/
+					team1.setAcronym(parsedLine[0]);
+					team2.setAcronym(parsedLine[2]);
 					
 					/*Override default boolean values for 
 					 * newly constructed NFLTeams		*/
@@ -168,6 +154,15 @@ public class Main {
 					}
 					/*create a new team without the # in the name*/
 					team = new NFLTeam(line.substring(1, line.length()));
+					/*Similarly to populating from the snap, use an acronym
+					 * for ease of use in the main method*/
+					if(line.substring(1,4).equals("NEW")){
+						/*NEW E, NEW Y*/
+						team.setAcronym(line.substring(1, 4) + line.charAt(6));
+					}
+					else{
+						team.setAcronym(line.substring(1, 4));
+					}
 				}
 				else{
 					team.addPlayer(line);
@@ -182,5 +177,19 @@ public class Main {
 			return null;
 		}
 		//return null;
+	}
+	
+	public static ArrayList<NFLTeam> removeDefensiveTeams(ArrayList<NFLTeam> teams){
+		ArrayList<NFLTeam> retu = new ArrayList<NFLTeam>();
+		
+		for(NFLTeam team : teams){
+			/*Teams list will be passed in sorted, so when we get to 
+			 * a team not on offense, break the loop for O(N/2) complexity*/
+			if(!team.getOffense())
+				break;
+			retu.add(team);
+		}
+		
+		return retu;
 	}
 }
